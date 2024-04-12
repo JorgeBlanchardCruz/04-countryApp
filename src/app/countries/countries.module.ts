@@ -9,6 +9,7 @@ import { ByCountryPageComponent } from './pages/by-country-page/by-country-page.
 import { ByRegionPageComponent } from './pages/by-region-page/by-region-page.component';
 import { CountryPageComponent } from './pages/country-page/country-page.component';
 import { CountryTableComponent } from './componets/country-table/country-table.component';
+import { AllCountriesPageComponent } from './pages/all-page/all-page.component';
 
 
 
@@ -19,7 +20,8 @@ import { CountryTableComponent } from './componets/country-table/country-table.c
     ByCountryPageComponent,
     ByRegionPageComponent,
     CountryPageComponent,
-    CountryTableComponent
+    CountryTableComponent,
+    AllCountriesPageComponent
   ],
   imports: [
     CommonModule,
