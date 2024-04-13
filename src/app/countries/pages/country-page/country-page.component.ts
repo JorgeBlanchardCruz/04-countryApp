@@ -39,11 +39,14 @@ export class CountryPageComponent implements OnInit{
     this.country = country;
   }
 
-  getLanguageKeys(languages: Languages): string[] {
-    return languages ? Object.keys(languages) : [];
+  public getLanguageValues(languages: Languages): string[] {
+    let languageValues = Object.values(languages);
+    let languageValuesJson = JSON.stringify(languageValues);
+
+    return JSON.parse(languageValuesJson);
   }
 
-  getCurrencyKeys(currencies: Currencies): string[] {
+  public getCurrencyKeys(currencies: Currencies): string[] {
     return currencies ? Object.keys(currencies) : [];
   }
 

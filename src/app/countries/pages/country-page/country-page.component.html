@@ -8,7 +8,7 @@
 <div *ngIf="country; else loading">
   <div class="row">
     <div class="col-12">
-      <h4> País: <strong>{{ country.name.common }}</strong></h4>
+      <h4><strong>{{ country.name.common }}</strong></h4>
       <hr>
     </div>
   </div>
@@ -23,54 +23,53 @@
 
       <ul class="list-group">
         <li class="list-group-item">
-          <strong>Población:</strong> {{ country.population | number }}
+          <div class="row">
+            <div class="col-4">Población:</div>
+            <div class="col"><strong>{{ country.population | number }} habitantes</strong></div>
+          </div>
         </li>
 
         <li class="list-group-item">
-          <strong>Código:</strong> {{ country.cca3 }}
+          <div class="row">
+            <div class="col-4">Código:</div>
+            <div class="col"><strong>{{ country.cca3 }}</strong></div>
+          </div>
         </li>
 
         <li class="list-group-item">
-          <strong>Capital:</strong> {{ country.capital }}
+          <div class="row">
+            <div class="col-4">Capital:</div>
+            <div class="col"><strong>{{ country.capital }}</strong></div>
+          </div>
         </li>
 
         <li class="list-group-item">
-          <strong>Región:</strong> {{ country.region }}
+          <div class="row">
+            <div class="col-4">Región:</div>
+            <div class="col"><strong>{{ country.region }}</strong></div>
+          </div>
         </li>
 
         <li class="list-group-item">
-          <strong>Subregión:</strong> {{ country.subregion }}
+          <div class="row">
+            <div class="col-4">Subregión:</div>
+            <div class="col"><strong>{{ country.subregion }}</strong></div>
+          </div>
         </li>
 
         <li class="list-group-item">
-          <strong>Área:</strong> {{ country.area | number }} km²
+          <div class="row">
+            <div class="col-4">Área:</div>
+            <div class="col"><strong>{{ country.area | number }} km²</strong></div>
+          </div>
         </li>
 
         <li class="list-group-item">
-          <strong>Países limítrofes:</strong>
-          <span *ngFor="let border of country.borders" class="badge badge-info mr-1">
-            {{ border }}
-          </span>
+          <div class="row">
+            <div class="col-4">Nombre oficial:</div>
+            <div class="col"><strong>{{ country.name.official }}</strong></div>
+          </div>
         </li>
-
-        <li class="list-group-item">
-          <strong>Lenguajes:</strong>
-          <span *ngFor="let language of getLanguageKeys(country.languages)" class="badge badge-info mr-1">
-            {{ language }}
-          </span>
-        </li>
-
-        <li class="list-group-item">
-          <strong>Monedas:</strong>
-          <span *ngFor="let currency of getCurrencyKeys(country.currencies)" class="badge badge-info mr-1">
-            {{ currency }}
-          </span>
-        </li>
-
-        <li class="list-group-item">
-          <strong>Nombre oficial:</strong> {{ country.name.official }}
-        </li>
-
       </ul>
 
     </div>
