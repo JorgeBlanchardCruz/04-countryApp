@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CountriesService } from '../../services/countries.service';
 import { Country } from '../../interfaces/country';
 
@@ -7,13 +7,17 @@ import { Country } from '../../interfaces/country';
   templateUrl: './all-page.component.html',
   styles: ``
 })
-export class AllCountriesPageComponent {
+export class AllCountriesPageComponent implements OnInit {
 
   public countries: Country[] = [];
 
   constructor(private countryService: CountriesService) {
-      this.searchCountries();
+
    }
+
+  public ngOnInit(): void {
+    this.searchCountries();
+  }
 
   public searchCountries(): void {
     this.countryService.getAll()
