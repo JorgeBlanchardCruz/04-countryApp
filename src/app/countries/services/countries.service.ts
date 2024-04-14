@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, delay, map, of } from 'rxjs';
 
 import { Country } from '../interfaces/country';
+import { Region } from '../interfaces/region';
+
 
 @Injectable({providedIn: 'root'})
 export class CountriesService {
@@ -14,14 +16,24 @@ export class CountriesService {
   private urlbyRegion: string = `${this.apiUrl}/region/`;
   private urlbyName: string = `${this.apiUrl}/name/`;
 
+  private regions: Region[] = ['Africa', 'Americas', 'Asia', 'Europe', 'Oceania'];
+
   constructor(private httpClient: HttpClient) { }
 
   private getCountriesRequest(url: string): Observable<Country[]> {
     return this.httpClient.get<Country[]>(url)
       .pipe(
-        delay(1000),
-        catchError( () => { return of([]) }),
-      );
+        map(countries => countries.sort((a, b) => {
+          if (a.name.common < b.name.common) {
+            return -1;
+          }
+          if (a.name.common > b.name.common) {
+            return 1;
+          }
+          return 0;
+        })),
+        catchError(() => { return of([]) }),
+      )
   }
 
   public getAll(): Observable<Country[]> {
@@ -53,6 +65,10 @@ export class CountriesService {
   public searchRegionName(term: string): Observable<Country[]> {
     const url = `${this.urlbyRegion}${term}`;
     return this.getCountriesRequest(url);
+  }
+
+  public getRegions(): Region[] {
+    return this.regions;
   }
 
 }
