@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, map, of, tap } from 'rxjs';
 
@@ -10,8 +10,6 @@ import { CacheStore } from '../interfaces/cache-store.interface';
 @Injectable({providedIn: 'root'})
 export class CountriesService {
 
-  private regions: Region[] = ['Africa', 'Americas', 'Asia', 'Europe', 'Oceania'];
-
   private apiUrl: string = 'https://restcountries.com/v3.1';
   private urlgetAll: string = `${this.apiUrl}/all`;
   private urlbyAlpha: string = `${this.apiUrl}/alpha/`;
@@ -19,6 +17,7 @@ export class CountriesService {
   private urlbyRegion: string = `${this.apiUrl}/region/`;
   private urlbyName: string = `${this.apiUrl}/name/`;
 
+  private cacheStoreKey: string = 'cacheStore';
   public cacheStore: CacheStore = {
     byCapital: {term: '', countries:[]},
     byCountry: {term: '', countries:[]},
@@ -26,9 +25,22 @@ export class CountriesService {
     all:       []
   }
 
-  constructor(private httpClient: HttpClient) {
+  private regions: Region[] = ['Africa', 'Americas', 'Asia', 'Europe', 'Oceania'];
 
+  constructor(private httpClient: HttpClient) {
+    this.loadFromLocalStorage();
   }
+
+  private savetoLocalStorage(): void {
+    localStorage.setItem(this.cacheStoreKey, JSON.stringify(this.cacheStore));
+  }
+
+  private loadFromLocalStorage(): void {
+    const cacheStore = localStorage.getItem(this.cacheStoreKey);
+    if (cacheStore)
+      this.cacheStore = JSON.parse(cacheStore);
+  }
+
 
   private getCountriesRequest(url: string): Observable<Country[]> {
     return this.httpClient.get<Country[]>(url)
@@ -42,7 +54,7 @@ export class CountriesService {
           }
           return 0;
         })),
-        catchError(() => { return of([]) }),
+        catchError(() => { return of([]) })
       )
   }
 
@@ -50,7 +62,8 @@ export class CountriesService {
     const url = this.urlgetAll;
     return this.getCountriesRequest(url)
       .pipe(
-        tap( countries => this.cacheStore.all = countries)
+        tap( countries => this.cacheStore.all = countries),
+        tap( () => this.savetoLocalStorage())
       );
   }
 
@@ -61,6 +74,7 @@ export class CountriesService {
       return this.httpClient.get<Country[]>(url)
       .pipe(
         map( countries => countries.length > 0 ? countries[0] : null),
+        tap( () => this.savetoLocalStorage()),
         catchError( () => { return of(null) })
       );
     }
@@ -69,7 +83,8 @@ export class CountriesService {
     const url = `${this.urlbyCapital}${term}`;
     return this.getCountriesRequest(url)
       .pipe(
-        tap( countries => this.cacheStore.byCapital = {term, countries})
+        tap( countries => this.cacheStore.byCapital = {term, countries}),
+        tap( () => this.savetoLocalStorage())
       );
   }
 
@@ -77,7 +92,8 @@ export class CountriesService {
     const url = `${this.urlbyName}${term}`;
     return this.getCountriesRequest(url)
       .pipe(
-        tap( countries => this.cacheStore.byCountry = {term, countries})
+        tap( countries => this.cacheStore.byCountry = {term, countries}),
+        tap( () => this.savetoLocalStorage())
       );
   }
 
@@ -85,7 +101,8 @@ export class CountriesService {
     const url = `${this.urlbyRegion}${region}`;
     return this.getCountriesRequest(url)
       .pipe(
-        tap( countries => this.cacheStore.byRegion = {region, countries}) // Updated 'region' property
+        tap( countries => this.cacheStore.byRegion = {region, countries}),
+        tap( () => this.savetoLocalStorage())
       );
   }
 
